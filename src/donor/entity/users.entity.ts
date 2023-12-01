@@ -1,8 +1,7 @@
-// src/donors/entities/donor.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class Donor {
+export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 

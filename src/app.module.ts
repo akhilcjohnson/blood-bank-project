@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DonorsModule } from './donor/donor.module';
+import { UsersModule } from './donor/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Donor } from './donor/entity/donor.entity';
+import { Users } from './donor/entity/users.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
-    DonorsModule,
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -16,13 +17,14 @@ import { JwtModule } from '@nestjs/jwt';
       username: 'root',
       password: '1234567890',
       database: 'blood',
-      entities: [Donor],
+      entities: [Users],
       synchronize: true,
     }),
+    PassportModule,
     JwtModule.register({
-      secret: 'secret-key', // need to replace with your secret key
-      signOptions: { expiresIn: '60s' }, // Token expiration time
-    }),
+      secret: 'your-secret-key',
+      signOptions: { expiresIn: '15m' }, // Access token expiration time
+    })
   ],
   controllers: [AppController],
   providers: [AppService],

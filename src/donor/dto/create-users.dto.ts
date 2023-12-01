@@ -1,5 +1,5 @@
 
-export class CreateDonorDto {
+export class CreateUsersDto {
     id: number;
     fullName: string;
     email: string;
