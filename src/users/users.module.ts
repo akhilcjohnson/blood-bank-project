@@ -17,7 +17,7 @@ import { UserRepository } from './users.typeorm';
       secret: 'your-refresh-token-secret',
       signOptions: { expiresIn: '30d' },
     }),
-    //   TokenModule
+
   ],
   providers: [ UserRepository,
     UsersService,
