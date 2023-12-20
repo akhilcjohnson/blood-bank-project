@@ -1,65 +1,32 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { Res } from '@nestjs/common';
-import { UsersInput } from 'src/inputs/user.input';
 import { User } from 'src/entity/users.entity';
 import { AuthTokens } from 'src/dto/auth.dto';
+import { UsersInput } from 'src/inputs/user.input';
 
-
- 
 @Resolver()
-export class UserResolver {
+export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Query(() => String)
-  hello(): string {
-    return 'Hello, GraphQL!';
+  @Query(() => [User])
+  async getUsers(): Promise<User[]> {
+    return await this.usersService.getUsers();
   }
 
-  @Mutation(() => User)
-  async registerUser(@Args('input') input: UsersInput): Promise<User> {
-    return await this.usersService.register(input);
-  }
+  @Mutation(() => AuthTokens)
+async registerUsers(@Args('input') createUsersDto: UsersInput): Promise<AuthTokens> {
+  const newRegistration = await this.usersService.createUsers(createUsersDto);
+  return newRegistration; 
+}
 
-  @Mutation(() => User)
-  async loginUser(@Args('email') email: string, @Args('password') password: string): Promise<User> {
-    return await this.usersService.login(email, password);
+  @Mutation(() => AuthTokens)
+  async login(@Args('email') email: string, @Args('password') password: string): Promise<string> {
+    try {
+      const { accessToken } = await this.usersService.login(email, password);
+      return accessToken;
+    } catch (error) {
+      throw new Error('Invalid credentials');
+    }
   }
 }
-  
 
-
- 
-  
-
-   
-  
-
-
-
-
-
-
-
-
-
-  
-  //   @Post('login')
-  //   async login(@Body() { email, password }: { email: string; password: string }, @Res() res): Promise<void> {
-  //     try {
-  //       // Call the login method from the UsersService to perform user login
-  //       const { accessToken, refreshToken } = await this.usersService.login(email, password);
-  
-  //       // Set cookies for the refresh token in the HTTP response
-  //       res.cookie('refreshToken', refreshToken, { httpOnly: true });
-  
-        
-  //       // Send a JSON response with the access token
-  //       res.json({ accessToken });
-  //     } 
-  //     catch (error) {
-  //       // Handle login failure, e.g., return a 401 Unauthorized response
-  //       res.status(401).json({ message: 'Invalid credentials' });
-  //     }
-  //   }
-  // }

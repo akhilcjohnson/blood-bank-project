@@ -2,17 +2,33 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: Int!
+  full_Name: String!
+  email: String!
+  password: String!
+  mobile_Number: String!
+  is_active: Boolean!
+  added_on: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type AuthTokens {
   accessToken: String!
   refreshToken: String!
 }
 
 type Query {
-  hello: String!
+  getUsers: [User!]!
 }
 
 type Mutation {
   registerUsers(input: UsersInput!): AuthTokens!
+  login(email: String!, password: String!): AuthTokens!
 }
 
 input UsersInput {

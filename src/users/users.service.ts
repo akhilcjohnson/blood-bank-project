@@ -1,65 +1,44 @@
-import { ConflictException, Injectable, NotFoundException,  } from '@nestjs/common';
-import { UserRepository } from './users.typeorm';
-import * as bcrypt from 'bcrypt';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from '../entity/users.entity';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { UsersInput } from 'src/inputs/user.input';
-import { User } from 'src/entity/users.entity';
+import { UserRepository } from './users.typeorm';
+
+
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UserRepository) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userRepository: UserRepository, 
+  ) {}
 
-
-  async register(input: UsersInput): Promise<User> {
-    const existUser = await this.usersRepository.findByEmail(input.email);
-    if (existUser){
-    throw new Error('User with this email already exists');
+  async getUsers(): Promise<User[]> {
+    return this.userRepository.getAllUsers();
   }
-  const newUser = await this.usersRepository.register(input);
-  return newUser;
-}
 
+  async createUsers(createUsersDto: UsersInput): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userRepository.createUser(createUsersDto);
+    return this.generateTokens(user);
+  }
 
-  async login(email: string, password: string): Promise<User> {
-    const user = await this.usersRepository.findByEmail(email);
-    if (!user || user.password !== password) {
-      throw new NotFoundException('Invalid email or password');
+  async login(email: string, password: string): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userRepository.findUserByEmail(email);
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Invalid credentials');
     }
-    return user;
+
+    return this.generateTokens(user);
+  }
+
+  private generateTokens(user: User): { accessToken: string, refreshToken: string } {
+    const accessToken = this.jwtService.sign({ sub: user.id, username: user.email });
+    const refreshToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '30d' });
+
+    return { accessToken, refreshToken };
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-  // async createUsers(userData: CreateUsersInput): Promise<{ accessToken: string; refreshToken: string }> {
-  //   const { email, password } = userData;
-
-  //   // Check if the user already exists
-  //   const existingUser = await this.usersRepository.findByEmail(email);
-  //   if (existingUser) {
-  //     throw new ConflictException('User with this email already exists');
-  //   }
-
-  //   // Hash the password before saving it
-  //   const hashedPassword = await bcrypt.hash(password, 10);
-
-  //   // Create a new user
-  //   const newUser = await this.usersRepository.createUser({ ...userData, password: hashedPassword });
-
-  //   // Generate JWT tokens
-  //   const accessToken = this.generateAccessToken(newUser);
-  //   const refreshToken = this.generateRefreshToken(newUser);
-
-  //   return { accessToken, refreshToken };
-  // }
 

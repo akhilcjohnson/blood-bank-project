@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "project=blood",
-=======
   "name": "blood-bank",
->>>>>>> 9b598c4 (status)
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -24,43 +20,33 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@nestjs/common": "^10.0.0",
-    "@nestjs/config": "^3.1.1",
-    "@nestjs/core": "^10.0.0",
-    "@nestjs/jwt": "^10.2.0",
-    "@nestjs/passport": "^10.0.2",
-    "@nestjs/platform-express": "^10.0.0",
-    "@nestjs/typeorm": "^10.0.1",
-    "bcrypt": "^5.1.1",
-    "mysql2": "^3.6.5",
-    "passport": "^0.6.0",
-    "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0",
-=======
     "@apollo/server": "^4.9.5",
     "@nestjs/apollo": "^12.0.11",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
-    "@nestjs/core": "^10.0.0",
+    "@nestjs/core": "^10.3.0",
     "@nestjs/graphql": "^12.0.11",
     "@nestjs/jwt": "^10.2.0",
-    "@nestjs/passport": "^10.0.3",
-    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/passport": "^10.0.2",
+    "@nestjs/platform-express": "^10.3.0",
     "@nestjs/typeorm": "^10.0.1",
     "apollo-server-express": "^3.13.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "graphql": "^16.8.1",
     "graphql-tools": "^9.0.0",
     "mysql2": "^3.6.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
->>>>>>> 9b598c4 (status)
+    "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

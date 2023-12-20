@@ -5,25 +5,25 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtAccessStrategy, JwtRefreshStrategy } from '../jwt/jwt.strategy';
 import { User } from '../entity/users.entity';
 import { UsersService } from './users.service';
-import { UserResolver } from './users.resolver';
+import { UsersResolver } from './users.resolver';
 import { jwtConstants } from '../jwt/jwt.constants';
+import { GraphQLModule } from '@nestjs/graphql';
 import { UserRepository } from './users.typeorm';
-// import { TokenModule } from './token.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'your-refresh-token-secret',
+      secret: jwtConstants.refreshSecret, // Use a constant for the secret
       signOptions: { expiresIn: '30d' },
     }),
-    //   TokenModule
   ],
-  providers: [ UserRepository,
+  providers: [ 
     UsersService,
-    // JwtAccessStrategy,
-    // JwtRefreshStrategy,
-    UserResolver,
+    UsersResolver,
+    UserRepository,
+    JwtAccessStrategy,
+    JwtRefreshStrategy,
   ],
 })
 export class UsersModule {}

@@ -1,4 +1,3 @@
-
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -8,21 +7,17 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { jwtConstants } from './jwt/jwt.constants';
-// import { TokenModule } from './users/token.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { User } from './entity/users.entity';
 import { join } from 'path';
-
+import { jwtConstants } from './jwt/jwt.constants';
 
 @Module({
   imports: [
-    UsersModule,
-
-    // TokenModule,
     ConfigModule.forRoot(), // Import the ConfigModule for environment variables
 
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -34,14 +29,14 @@ import { join } from 'path';
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
     }),
     PassportModule, // Configure Passport module for authentication
-    JwtModule.register({ //Configure JWT for authentication
-      secret: 'your-secret-key',
-      signOptions: { expiresIn: '15m' }, // Access token expiration time
+    JwtModule.register({ // Configure JWT for authentication
+      secret: jwtConstants.accessSecret,// Use a constant for the secret
+      signOptions: { expiresIn: '15m' }, // expiration time
     }),
-    
+
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(),'src/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'schema.gpl')
     }),
   ],
   controllers: [AppController],
