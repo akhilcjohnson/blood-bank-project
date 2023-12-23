@@ -4,12 +4,20 @@
 
 type User {
   id: Int!
+  user_type: UserType!
   full_Name: String!
   email: String!
   password: String!
+  isAdmin: String!
   mobile_Number: String!
   is_active: Boolean!
   added_on: DateTime!
+}
+
+enum UserType {
+  ADMIN
+  DONOR
+  RECEIVER
 }
 
 """
@@ -23,7 +31,7 @@ type AuthTokens {
 }
 
 type Query {
-  getUsers: [User!]!
+  getlistUsers(email: String!, user_type: Float!): [User!]!
 }
 
 type Mutation {
@@ -32,6 +40,7 @@ type Mutation {
 }
 
 input UsersInput {
+  user_type: Float!
   full_Name: String!
   email: String!
   password: String!

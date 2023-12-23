@@ -1,4 +1,4 @@
-// user.repository.ts
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,26 +9,38 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
+  async findByEmail(email: string): Promise<User> {
+    try {
+      return await this.userRepository.findOne({ where: { email } });
+    } catch (error) {
+      throw new Error('Failed to fetch user by email');
+    }
+  }
+  async find(): Promise<User[]> {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      throw new Error('Failed to fetch all users');
+    }
+  }
 
   async createUser(createUsersDto: UsersInput): Promise<User> {
     const { password, ...userData } = createUsersDto;
-
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = this.usersRepository.create({ ...userData, password: hashedPassword });
-    const newRegistration = await this.usersRepository.save(user);
-
-    return newRegistration; // Return the saved user object instead of tokens
+    const user = this.userRepository.create({ ...userData, password: hashedPassword });
+    const newRegistration = await this.userRepository.save(user);
+    return newRegistration;
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { email } });
+  async findUserByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({ where: { email } });
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
+ 
+ 
 }
 
 
